@@ -40,10 +40,40 @@ export class ItemCtranferencia extends Component {
               </View>
               <View style={styles.subContenido}>
                 <View>
-                  <Text style={styles.textoNegrita}>{"Tfno:"}</Text>
+                  <Text style={styles.textoNegrita}>{"Id:"}</Text>
+                </View>
+                <View>
+                  <Text style={styles.texto}>
+                    {this.props.pedido.numDocumentoFact}
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.subContenido}>
+                <View>
+                  <Text style={styles.textoNegrita}>{"D:"}</Text>
+                </View>
+                <View>
+                  <Text style={styles.texto}>
+                    {this.props.pedido.direccionFact}
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.subContenido}>
+                <View>
+                  <Text style={styles.textoNegrita}>{"T:"}</Text>
                 </View>
                 <View>
                   <Text style={styles.texto}>{this.props.pedido.telefono}</Text>
+                </View>
+              </View>
+              <View style={styles.subContenido}>
+                <View>
+                  <Text style={styles.textoNegrita}>{"M:"}</Text>
+                </View>
+                <View>
+                  <Text style={styles.texto}>
+                    {this.props.pedido.correoFact}
+                  </Text>
                 </View>
               </View>
               <View style={styles.subContenido}>
@@ -167,27 +197,25 @@ export class ItemCtranferencia extends Component {
                 <Text>PAGO EFECTIVO</Text>
               </View>
             )}
-            {this.props.pedido.asociado == "asociado@gmail.com" ? (
-              <View style={{ flex: 1 }}>
-                <Button
-                  title="Asignar Repartidor"
-                  onPress={() => {
-                    this.props.fnpedidoRepartidor(this.props.pedido);
-                  }}
-                />
-              </View>
-            ) : (
-              <View
-                style={{
-                  flex: 1,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  backgroundColor: "pink",
+
+            <View style={{ flex: 1 }}>
+              <Button
+                title={
+                  this.props.pedido.asociado == "asociado@gmail.com"
+                    ? "Asignar Repartidor"
+                    : "Modificar Repartidor"
+                }
+                buttonStyle={{
+                  backgroundColor:
+                    this.props.pedido.asociado == "asociado@gmail.com"
+                      ? "red"
+                      : "green",
                 }}
-              >
-                <Text>REPARTIDOR ASIGNADO</Text>
-              </View>
-            )}
+                onPress={() => {
+                  this.props.fnpedidoRepartidor(this.props.pedido);
+                }}
+              />
+            </View>
 
             {this.props.pedido.numDocumentoFact ? (
               this.props.pedido.facturaEntregada ? (
@@ -261,7 +289,7 @@ const styles = StyleSheet.create({
     flex: 2,
   },
   contenedorRepartidor: {
-    flex: 3,
+    flex: 2,
   },
 
   contenedorDescripcion: {
