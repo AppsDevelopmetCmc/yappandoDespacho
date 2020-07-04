@@ -82,6 +82,12 @@ export class FormCTransferencia extends Component {
     });
   };
 
+  actualizarEstadoPedidoFactura = (pedido) => {
+    let srvPedido = new ServicioPedidos();
+    srvPedido.actualizarPedidoEstadoFactura(pedido.id, {
+      facturaEntregada: true,
+    });
+  };
   render() {
     return (
       <View style={styles.columna}>
@@ -146,6 +152,9 @@ export class FormCTransferencia extends Component {
                     pedido={objeto.item}
                     fnActualizar={this.actualizarEstadoPedido}
                     fnpedidoRepartidor={this.pedidoRepartidor}
+                    fnActualizarEstadoPedidoFactura={
+                      this.actualizarEstadoPedidoFactura
+                    }
                   />
                 );
               }}

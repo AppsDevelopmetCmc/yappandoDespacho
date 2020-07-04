@@ -206,7 +206,9 @@ export class ItemCtranferencia extends Component {
                   <Button
                     title="Registrar Entrega Factura"
                     onPress={() => {
-                      this.props.fnpedidoRepartidor(this.props.pedido);
+                      this.props.fnActualizarEstadoPedidoFactura(
+                        this.props.pedido
+                      );
                     }}
                   />
                 </View>
