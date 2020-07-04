@@ -4,7 +4,7 @@ import { TouchableHighlight } from 'react-native-gesture-handler';
 import { Avatar, Button } from 'react-native-elements';
 import { recuperar } from './ServicioImagen'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { ItemPedidoMascara } from '../screens/despachador/componentes/ItemPedidoMascara';
+import { ItemPedidoMascara } from './ItemPedidoMascara';
 import * as colores from './constants/Colores';
 
 
