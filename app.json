@@ -23,6 +23,11 @@
     ],
     "ios": {
       "supportsTablet": true
-    }
+    },
+	 "android": {
+		"versionCode": 1,
+         "package": "admin.yappando.com"
+        
+      }
   }
 }

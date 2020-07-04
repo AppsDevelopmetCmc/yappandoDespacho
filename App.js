@@ -2,7 +2,6 @@ import * as React from "react";
 import { View, Text } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { YellowBox } from "react-native";
 
 import { FormTotales } from "./screens/FormTotales";
 import { PedidoDisponibilidad } from "./screens/disponibilidad/PedidoDisponibilidad";
@@ -17,10 +16,6 @@ const TabHome = createBottomTabNavigator();
 
 const HomeStack = createStackNavigator();
 
-YellowBox.ignoreWarnings([
-  "Warning: componentWillReceiveProps has ",
-  "Setting a timer",
-]);
 function DisponibilidadStackScreen() {
   return (
     <HomeStack.Navigator>
