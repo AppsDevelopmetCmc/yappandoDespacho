@@ -48,11 +48,11 @@ export class FormTotales extends Component {
    }
 
    repintarLista = async (pedido) => {
-      console.log("ListaPedido", pedido)
+      //console.log("ListaPedido", pedido)
       if (pedido.length > 0) {
          let srvPedido = new ServicioPedidos();
          let productos = await srvPedido.obtenerProductos()
-         console.log("productos", productos)
+         // console.log("productos", productos)
          let productosTotales = [];
 
          for (let i = 0; i < productos.length; i++) {
@@ -63,10 +63,10 @@ export class FormTotales extends Component {
                if (pedido[j].estado !== 'CA') {
                   for (let k = 0; k < pedido[j].listaCombos.length; k++) {
                      if (productos[i].id == pedido[j].listaCombos[k].id) {
-                        console.log("producto", productos[i].nombre)
+                    /*    console.log("producto", productos[i].nombre)
                         console.log("pedido id", pedido[j].id)
                         console.log("cantidad pedido", pedido[j].listaCombos[k].cantidad)
-                        console.log("item", pedido[j].listaCombos[k].cantidadItem)
+                        console.log("item", pedido[j].listaCombos[k].cantidadItem) */
                         totalProducto = parseInt(totalProducto) + parseInt(pedido[j].listaCombos[k].cantidadItem * pedido[j].listaCombos[k].cantidad);
                         cantidadTotal = parseInt(cantidadTotal) + parseInt(pedido[j].listaCombos[k].cantidad);
                      }
@@ -77,7 +77,7 @@ export class FormTotales extends Component {
             productosItem.cantidadTotal = parseInt(cantidadTotal);
             productosTotales.push(productosItem);
          }
-         console.log('totales productos', productosTotales)
+         // console.log('totales productos', productosTotales)
          this.setState({
             listaTotalesPedidos: productosTotales
          })

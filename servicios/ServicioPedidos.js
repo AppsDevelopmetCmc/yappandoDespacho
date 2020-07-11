@@ -6,19 +6,10 @@ import "@firebase/storage";
 
 export class ServicioPedidos {
   constructor() {
-    if (global.firebaseRegistered != true) {
-      global.firebaseConfig = {
-        apiKey: "AIzaSyCuPTN-HQyPxrLUr40Bl2nmX5PqNCUVnJg",
-        authDomain: "little-market-dev-377b6.firebaseapp.com",
-        databaseURL: "https://little-market-dev-377b6.firebaseio.com",
-        projectId: "little-market-dev-377b6",
-        storageBucket: "little-market-dev-377b6.appspot.com",
-        messagingSenderId: "549900659572",
-        appId: "1:549900659572:web:ce8621915b320376469a21",
-      };
-      firebase.initializeApp(firebaseConfig);
+    if (global.firebaseRegistrado != true) {
+      firebase.initializeApp(global.firebaseConfig);
       global.db = firebase.firestore();
-      global.firebaseRegistered = true;
+      global.firebaseRegistrado = true;
       global.storage = firebase.storage();
     }
   }
@@ -153,6 +144,12 @@ export class ServicioPedidos {
             pedido.id = change.doc.id;
             if (change.type == "added") {
               arregloUtil.agregar(pedido, fnRepintar);
+              new ServicioPedidos().crearYapa(pedido.id,{
+                id: 'yapa',
+                nombre: pedido.yapa,
+                empacado:pedido.empacado,
+                recibido:false,
+             });
             }
             if (change.type == "modified") {
               arregloUtil.actualizar(pedido, fnRepintar);
@@ -270,6 +267,20 @@ export class ServicioPedidos {
         }
       });
   };
+  crearYapa = (idPedido,yapa) => {
+    global.db
+    .collection("pedidos")
+    .doc(idPedido)
+    .collection("combos")
+       .doc(yapa.id)
+       .set(yapa)
+       .then(function() {
+         // Alert.alert('Yapa agregado');
+       })
+       .catch(function(error) {
+          Alert.alert('error' + error);
+       });
+ };
 
   registrarEscuchaPedidosTransf = (arreglo, fecha, fnRepintar, fnFinalizar) => {
     let arregloUtil = new ArregloUtil(arreglo);

@@ -52,7 +52,8 @@ export class ListaRepartidores extends Component {
          {
             asociado: repartidor.correo,
             nombreAsociado: repartidor.nombre,
-            telefonoAsociado: repartidor.telefono
+            telefonoAsociado: repartidor.telefono,
+            estado:'AA'
          });
 
          this.props.navigation.goBack();

@@ -11,6 +11,20 @@ export class ItemCtranferencia extends Component {
     super(props);
   }
 
+  obtenerEstado() {
+    let descripcionEstado = "";
+    if (this.props.pedido.estado == "CT" || this.props.pedido.estado == "PI"){
+      descripcionEstado = "Ingresado";
+    } else if (this.props.pedido.estado == "TA"){
+      descripcionEstado =  "Transferencia Aprobada";
+    } else if (this.props.pedido.estado == "AA"){
+      descripcionEstado =  "Repartidor Asignado";
+    } else if (this.props.pedido.estado == "TR"){
+      descripcionEstado =  "Transferencia Rechazada";
+    }
+   return descripcionEstado;
+  }
+
   render() {
     return (
       <View
@@ -134,27 +148,38 @@ export class ItemCtranferencia extends Component {
                 <View>
                   <Text style={styles.textoNegrita}>{"Estado:"}</Text>
                   <Text style={styles.texto}>
-                    {this.props.pedido.estado == "CT" ||
-                    this.props.pedido.estado == "PI"
-                      ? "Ingresada"
-                      : this.props.pedido.estado == "TA"
-                      ? "Aprobada"
-                      : "Rechazada"}
+                    { this.obtenerEstado()}
                   </Text>
                 </View>
               </View>
               <View style={styles.subContenido}>
                 <View>
+                
                   <Text style={styles.textoNegrita}>{"Forma de Pago:"}</Text>
-                  <Text style={styles.texto}>
-                    {this.props.pedido.formaPago}
-                  </Text>
+                  {
+                    this.props.pedido.formaPago == "EFECTIVO" ? (
+                      <View
+                        style={{
+                          flex: 1,
+                          alignItems: "center",
+                          justifyContent: "center",
+                          backgroundColor: "green",
+                        }}
+                      >
+                        <Text>EFECTIVO</Text>
+                      </View>
+                    ) : (
+                      <Text style={styles.texto}>
+                        {this.props.pedido.formaPago}
+                      </Text>
+                    )
+                  }
                 </View>
               </View>
             </View>
           </View>
           <View style={{ flex: 1, marginBottom: 5, flexDirection: "row" }}>
-            {this.props.pedido.formaPago == "TRANSFERENCIA" ? (
+            {this.props.pedido.formaPago == "TRANSFERENCIA" &&
               <View
                 style={{
                   flex: 1,
@@ -162,43 +187,23 @@ export class ItemCtranferencia extends Component {
                   justifyContent: "center",
                 }}
               >
-                {this.props.pedido.estado == "TA" ? (
-                  <View
-                    style={{
-                      flex: 1,
-                      alignItems: "center",
-                      justifyContent: "center",
-                      backgroundColor: "green",
-                    }}
-                  >
-                    <Text>Transferencia OK</Text>
-                  </View>
-                ) : (
-                  <View style={{ flex: 1 }}>
-                    <Button
-                      style={{ marginRight: 10 }}
-                      title="Registrar Transferencia"
-                      onPress={() => {
-                        this.props.fnActualizar(this.props.pedido);
-                      }}
-                    />
-                  </View>
-                )}
+                {
+                  this.props.pedido.estado == "CT" && 
+                    <View style={{ flex: 1 }}>
+                      <Button
+                        style={{ marginRight: 10 }}
+                        title="Registrar Transferencia"
+                        onPress={() => {
+                          this.props.fnActualizar(this.props.pedido);
+                        }}
+                      />
+                    </View>
+                }
               </View>
-            ) : (
-              <View
-                style={{
-                  flex: 1,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  backgroundColor: "blue",
-                }}
-              >
-                <Text>PAGO EFECTIVO</Text>
-              </View>
-            )}
+            }
 
-            <View style={{ flex: 1 }}>
+            { (this.props.pedido.estado == "TA" || this.props.pedido.estado == "PI") &&
+             <View style={{ flex: 1 }}>
               <Button
                 title={
                   this.props.pedido.asociado == "asociado@gmail.com"
@@ -215,7 +220,7 @@ export class ItemCtranferencia extends Component {
                   this.props.fnpedidoRepartidor(this.props.pedido);
                 }}
               />
-            </View>
+            </View>}
 
             {this.props.pedido.numDocumentoFact ? (
               this.props.pedido.facturaEntregada ? (
@@ -230,7 +235,7 @@ export class ItemCtranferencia extends Component {
                   <Text>FACTURA ENTREGADA</Text>
                 </View>
               ) : (
-                <View style={{ flex: 1 }}>
+                this.props.pedido.estado == "AA" ? <View style={{ flex: 1 }}>
                   <Button
                     title="Registrar Entrega Factura"
                     onPress={() => {
@@ -239,7 +244,7 @@ export class ItemCtranferencia extends Component {
                       );
                     }}
                   />
-                </View>
+                </View> : null
               )
             ) : (
               <View

@@ -11,6 +11,11 @@ import { ListaPedidoCombo } from "./screens/despachador/ListaPedidoCombo";
 import { FormCTransferencia } from "./screens/transferencias/FormCTransferencia";
 import { FormCFacturas } from "./screens/facturas/FormCFacturas";
 import { ListaRepartidores } from "./screens/repartidor/ListaRepartidores";
+import { cargarConfiguracion } from "./utils/FirebaseConfig"
+
+if (!global.firebaseRegistrado) {
+  cargarConfiguracion();
+}
 
 const TabHome = createBottomTabNavigator();
 
