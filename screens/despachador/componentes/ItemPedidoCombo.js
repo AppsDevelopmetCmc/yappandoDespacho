@@ -46,7 +46,7 @@ export class ItemPedidoCombo extends Component {
          } 
 
         </View>
-        { !this.props.pedidoComboItem.id == 'yapa' && <View style={{
+        { this.props.pedidoComboItem.id !== 'yapa' && <View style={{
           flex: 1, fontWeight: 'bold',
           fontSize: 18, 
           alignItems: 'center',
