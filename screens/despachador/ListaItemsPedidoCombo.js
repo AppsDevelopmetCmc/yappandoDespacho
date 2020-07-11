@@ -18,8 +18,6 @@ export class ListaItemsPedidoCombo extends Component {
          listaItemsPedidos: lista,
 
       }
-
-
    }
 
    componentDidMount() {
@@ -42,21 +40,30 @@ export class ListaItemsPedidoCombo extends Component {
    render() {
       return (
          <View style={{ flex: 1 }}>
-            <View style={styles.titulo}>
+            <View style={styles.cabecera}>
             <Text style={{
                fontWeight: 'bold',
                fontSize: 18,
                marginLeft: 10,
-               marginTop: 5
+               marginTop: 5,
+               alignSelf: 'center'
             }}>Detalle del Pedido</Text>
-            <View style={{ flexDirection: 'row', }}>
-               <Text style={styles.textoNegrita}>{'Factura: '}</Text>
+            <View style={{ flexDirection: 'row',}}>
+               <Text style={styles.textoNegrita}>{'Pedido: '}</Text>
                <Text style={{
                }}>{this.pedidoCombo.orden.slice(-5)}</Text>
             </View>
+            <View style={{ flexDirection: 'row', }}>
+               <Text style={styles.textoNegrita}>{'Cliente: '}</Text>
+               <Text style={{
+               }}>{this.pedidoCombo.nombreCliente}</Text>
+            </View>
             </View>
             <View style={{ flex: 6 }}>
+
+
                <FlatList
+               style={{ height: '85%' }}
                   data={this.state.listaItemsPedidos}
                   renderItem={objeto => {
                      return (
@@ -64,6 +71,7 @@ export class ListaItemsPedidoCombo extends Component {
                            pedidoComboItem={objeto.item}
                            idPedido={this.pedidoCombo.id}
                            empacadoPedido={this.pedidoCombo.empacado}
+                           esYapa = {false}
                         />
                      );
                   }}
@@ -139,8 +147,8 @@ const styles = StyleSheet.create({
       fontWeight: 'bold',
       marginLeft: 10
     },
-    titulo: {
-      alignItems: 'center',
+    cabecera: {
+      
        flex: 1,
         backgroundColor: colores.colorClaroPrimarioTomate, 
         borderTopLeftRadius: 20, 
