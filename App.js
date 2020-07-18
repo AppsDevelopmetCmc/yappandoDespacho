@@ -83,24 +83,13 @@ function App() {
         <TabHome.Screen
           name="TransferenciaStackScreen"
           component={TransferenciaStackScreen}
-          options={{ tabBarLabel: "Transferencias" }}
-        />
-
-        <TabHome.Screen
-          name="FormCFacturasScreen"
-          component={FormCFacturas}
-          options={{ tabBarLabel: "Facturas" }}
+          options={{ tabBarLabel: "Control" }}
         />
 
         <TabHome.Screen
           name="FormTotalesScreen"
           component={FormTotales}
           options={{ tabBarLabel: "Consolidador" }}
-        />
-        <TabHome.Screen
-          name="DisponibilidadStackScreen"
-          component={DisponibilidadStackScreen}
-          options={{ tabBarLabel: "Disponibilidad" }}
         />
         <TabHome.Screen
           name="DespachadorStackScreen"
