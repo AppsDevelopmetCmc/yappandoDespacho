@@ -24,7 +24,7 @@ export class ListaItemsPedidoCombo extends Component {
       console.log("Ingresa")
       let pedidoCombos = [];
       let srvPedido = new ServicioPedidos();
-      srvPedido.registrarEscuchaPedidoCombo(this.pedidoCombo.id,pedidoCombos, this.repintarLista)
+      srvPedido.registrarEscuchaPedidoCombo(this.pedidoCombo.id, pedidoCombos, this.repintarLista)
    }
 
    repintarLista = (combos) => {
@@ -32,38 +32,51 @@ export class ListaItemsPedidoCombo extends Component {
       this.setState({
          listaItemsPedidos: combos
       })
+      this.despachando(combos);
    }
 
+   despachando = (lista) => {
+      let srvPedidos = new ServicioPedidos();
+      let despacha = false;
+      for (var i = 0; i < lista.length; i++) {
+         if (lista[i].empacado == true) {
+            despacha = true;
+            break;
+         }
+      }
+      console.log('despacha' + despacha);
+      srvPedidos.actualizarDespachando(this.pedidoCombo.id, despacha)
 
+   }
 
 
    render() {
       return (
          <View style={{ flex: 1 }}>
             <View style={styles.cabecera}>
-            <Text style={{
-               fontWeight: 'bold',
-               fontSize: 18,
-               marginLeft: 10,
-               marginTop: 5,
-               alignSelf: 'center'
-            }}>Detalle del Pedido</Text>
-            <View style={{ flexDirection: 'row',}}>
-               <Text style={styles.textoNegrita}>{'Pedido: '}</Text>
                <Text style={{
-               }}>{this.pedidoCombo.orden.slice(-5)}</Text>
-            </View>
-            <View style={{ flexDirection: 'row', }}>
-               <Text style={styles.textoNegrita}>{'Cliente: '}</Text>
-               <Text style={{
-               }}>{this.pedidoCombo.nombreCliente}</Text>
-            </View>
+                  fontWeight: 'bold',
+                  fontSize: 18,
+                  marginLeft: 10,
+                  marginTop: 5,
+                  alignSelf: 'center'
+               }}>Detalle del Pedido</Text>
+               <View style={{ flexDirection: 'row', }}>
+                  <Text style={styles.textoNegrita}>{'Pedido: '}</Text>
+                  <Text style={{
+                  }}>{this.pedidoCombo.orden.slice(-5)}</Text>
+               </View>
+               <View style={{ flexDirection: 'row', }}>
+                  <Text style={styles.textoNegrita}>{'Cliente: '}</Text>
+                  <Text style={{
+                  }}>{this.pedidoCombo.nombreCliente}</Text>
+               </View>
             </View>
             <View style={{ flex: 6 }}>
 
 
                <FlatList
-               style={{ height: '85%' }}
+                  style={{ height: '85%' }}
                   data={this.state.listaItemsPedidos}
                   renderItem={objeto => {
                      return (
@@ -71,7 +84,8 @@ export class ListaItemsPedidoCombo extends Component {
                            pedidoComboItem={objeto.item}
                            idPedido={this.pedidoCombo.id}
                            empacadoPedido={this.pedidoCombo.empacado}
-                           esYapa = {false}
+
+                           esYapa={false}
                         />
                      );
                   }}
@@ -140,20 +154,20 @@ const styles = StyleSheet.create({
       textAlign: 'left',
       //fontWeight: 'bold',
       marginLeft: 10
-    },
-    textoNegrita: {
+   },
+   textoNegrita: {
       fontSize: 15,
       textAlign: 'left',
       fontWeight: 'bold',
       marginLeft: 10
-    },
-    cabecera: {
-      
-       flex: 1,
-        backgroundColor: colores.colorClaroPrimarioTomate, 
-        borderTopLeftRadius: 20, 
-        borderTopEndRadius: 20, 
-        marginLeft: 5,
-         marginRight: 5
+   },
+   cabecera: {
+
+      flex: 1,
+      backgroundColor: colores.colorClaroPrimarioTomate,
+      borderTopLeftRadius: 20,
+      borderTopEndRadius: 20,
+      marginLeft: 5,
+      marginRight: 5
    },
 });
