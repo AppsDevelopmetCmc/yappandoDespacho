@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { Avatar, Button,CheckBox } from 'react-native-elements';
+import { Avatar, Button, CheckBox } from 'react-native-elements';
 import { recuperar } from '../../../componentes/ServicioImagen'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { convertir } from '../../../utils/ConvertidorUnidades'
 import * as colores from '../../../componentes/constants/Colores'
-import {ServicioPedidos} from '../../../servicios/ServicioPedidos'
+import { ServicioPedidos } from '../../../servicios/ServicioPedidos'
 
 export class ItemPedidoCombo extends Component {
   constructor(props) {
@@ -16,15 +16,16 @@ export class ItemPedidoCombo extends Component {
 
   }
 
-  actualizarEmpacadaCombo=(empacado)=>
-  {
-    let srvPedidos=new ServicioPedidos();
-    srvPedidos.actualizarEmpacadoPC(this.props.idPedido,{
-      id:this.props.pedidoComboItem.id,
-      empacado:empacado,
+  actualizarEmpacadaCombo = (empacado) => {
+    let srvPedidos = new ServicioPedidos();
+    srvPedidos.actualizarEmpacadoPC(this.props.idPedido, {
+      id: this.props.pedidoComboItem.id,
+      empacado: empacado,
     })
 
   }
+
+
 
 
   render() {
@@ -37,20 +38,20 @@ export class ItemPedidoCombo extends Component {
       }>
         <View style={{ flex: 2 }} >
           <Text style={styles.textoNegrita}>
-            {this.props.pedidoComboItem.id == 'yapa' && this.props.pedidoComboItem.nombre == 'D' ? 'Yapa Donada':this.props.pedidoComboItem.nombre }
+            {this.props.pedidoComboItem.id == 'yapa' && this.props.pedidoComboItem.nombre == 'D' ? 'Yapa Donada' : this.props.pedidoComboItem.nombre}
           </Text>
-         { !this.props.pedidoComboItem.id == 'yapa' &&
-          <Text style={styles.texto}>
-            {convertir(this.props.pedidoComboItem.unidad, this.props.pedidoComboItem.cantidadItem)}
-          </Text>
-         } 
+          {!this.props.pedidoComboItem.id == 'yapa' &&
+            <Text style={styles.texto}>
+              {convertir(this.props.pedidoComboItem.unidad, this.props.pedidoComboItem.cantidadItem)}
+            </Text>
+          }
 
         </View>
-        { this.props.pedidoComboItem.id !== 'yapa' && <View style={{
+        {this.props.pedidoComboItem.id !== 'yapa' && <View style={{
           flex: 1, fontWeight: 'bold',
-          fontSize: 18, 
+          fontSize: 18,
           alignItems: 'center',
-          justifyContent:'center'
+          justifyContent: 'center'
         }}>
           <Text style={{
             fontWeight: 'bold',
@@ -59,19 +60,20 @@ export class ItemPedidoCombo extends Component {
             {this.props.pedidoComboItem.cantidad}
           </Text>
         </View>
-         }
+        }
         <View style={{ flex: 1, marginRight: 20 }}>
-        <CheckBox
-                checked={this.state.checked}
-                onPress={() => {
-                    this.actualizarEmpacadaCombo(!this.state.checked)
+          <CheckBox
+            checked={this.state.checked}
+            onPress={() => {
+              this.actualizarEmpacadaCombo(!this.state.checked)
 
-                  this.setState({ checked: !this.state.checked });
-                }}
-                checkedColor={colores.colorOscuroPrimarioTomate}
-                size={22}
-                uncheckedColor={colores.colorOscuroPrimario}
-              ></CheckBox>
+              this.setState({ checked: !this.state.checked });
+
+            }}
+            checkedColor={colores.colorOscuroPrimarioTomate}
+            size={22}
+            uncheckedColor={colores.colorOscuroPrimario}
+          ></CheckBox>
         </View>
       </View>
 

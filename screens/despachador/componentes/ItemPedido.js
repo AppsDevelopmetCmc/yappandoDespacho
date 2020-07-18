@@ -19,6 +19,7 @@ export class ItemPedido extends Component {
           <View style={styles.contenedorDescripcion}>
             <View style={styles.contenedorPedido}>
               <View style={styles.subContenido}>
+              
                 <View >
                   <Text style={styles.textoNegrita}>
                     {'PEDIDO:'}
@@ -27,7 +28,9 @@ export class ItemPedido extends Component {
                 <View >
                   <Text style={styles.texto}>
                     {this.props.pedido.orden.slice(-5)}
+                  
                   </Text>
+                 
                 </View>
               </View>
               <View style={{}}>
@@ -52,10 +55,11 @@ export class ItemPedido extends Component {
                   <Text style={styles.texto}>
                     {
                       this.props.pedido.asociado
+
                     }
                   </Text>
                 </View>
- {/*                <View >
+                {/*                <View >
                   <Text style={styles.texto}>
                     {
                       this.props.pedido.asociado
@@ -63,6 +67,23 @@ export class ItemPedido extends Component {
                   </Text>
                 </View> */}
               </View>
+                <View style={this.props.pedido.despachando && !this.props.pedido.empacado ? styles.filaSeleccionada : styles.fila}>
+                   {this.props.pedido.despachando == true && this.props.pedido.empacado==false ? ( <Text  style={styles.textoNegrita}>
+                    {'Despachando'}
+                  </Text>):( <Text>
+                   
+                  </Text>)}
+                </View>
+                <View style={ this.props.pedido.empacado ? styles.filaSeleccionada : styles.fila}>
+                   {this.props.pedido.empacado == true  ? ( <Text  style={styles.textoNegrita}>
+                    {'Completado'}
+                  </Text>):( <Text>
+                   
+                  </Text>)}
+                </View>
+
+
+
             </View>
 
           </View>
@@ -93,7 +114,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 2,
     marginLeft: 5,
-    marginRight:5,
+    marginRight: 5,
     borderBottomLeftRadius: 6,
     borderTopLeftRadius: 6,
 
@@ -116,8 +137,8 @@ const styles = StyleSheet.create({
   subContenido: {
     marginTop: 5,
     flexDirection: 'row',
-    alignItems:'center',
-    justifyContent:'center'
+    alignItems: 'center',
+    justifyContent: 'center'
   },
 
   texto: {
@@ -138,7 +159,7 @@ const styles = StyleSheet.create({
     backgroundColor: colores.colorPrimarioAmarilloRgba,
     marginTop: 2,
     marginLeft: 5,
-    marginRight:5,
+    marginRight: 5,
     borderBottomLeftRadius: 6,
     borderTopLeftRadius: 6,
 
