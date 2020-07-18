@@ -1,5 +1,5 @@
 import * as React from "react";
-import { View, Text } from "react-native";
+import { View, Text, YellowBox } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
@@ -11,12 +11,16 @@ import { ListaPedidoCombo } from "./screens/despachador/ListaPedidoCombo";
 import { FormCTransferencia } from "./screens/transferencias/FormCTransferencia";
 import { FormCFacturas } from "./screens/facturas/FormCFacturas";
 import { ListaRepartidores } from "./screens/repartidor/ListaRepartidores";
-import { cargarConfiguracion } from "./utils/FirebaseConfig"
+import { cargarConfiguracion } from "./utils/FirebaseConfig";
 
 if (!global.firebaseRegistrado) {
   cargarConfiguracion();
 }
 
+YellowBox.ignoreWarnings([
+  "Warning: componentWillReceiveProps has ",
+  "Setting a timer",
+]);
 const TabHome = createBottomTabNavigator();
 
 const HomeStack = createStackNavigator();
