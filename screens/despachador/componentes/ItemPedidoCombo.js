@@ -38,16 +38,16 @@ export class ItemPedidoCombo extends Component {
       }>
         <View style={{ flex: 2 }} >
           <Text style={styles.textoNegrita}>
-            {this.props.pedidoComboItem.id == 'yapa' && this.props.pedidoComboItem.nombre == 'D' ? 'Yapa Donada' : this.props.pedidoComboItem.nombre}
+            {this.props.pedidoComboItem.nombre}
           </Text>
-          {!this.props.pedidoComboItem.id == 'yapa' &&
+          
             <Text style={styles.texto}>
               {convertir(this.props.pedidoComboItem.unidad, this.props.pedidoComboItem.cantidadItem)}
             </Text>
-          }
+          
 
         </View>
-        {this.props.pedidoComboItem.id !== 'yapa' && <View style={{
+        <View style={{
           flex: 1, fontWeight: 'bold',
           fontSize: 18,
           alignItems: 'center',
@@ -60,7 +60,7 @@ export class ItemPedidoCombo extends Component {
             {this.props.pedidoComboItem.cantidad}
           </Text>
         </View>
-        }
+        
         <View style={{ flex: 1, marginRight: 20 }}>
           <CheckBox
             checked={this.state.checked}

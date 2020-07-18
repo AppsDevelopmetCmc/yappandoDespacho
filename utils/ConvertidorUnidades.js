@@ -9,6 +9,7 @@ export const convertir = (unidad, cantidad) => {
       global.unidadesSingular.set('at', 'atado');
       global.unidadesSingular.set('ar', 'arroba');
       global.unidadesSingular.set('gr', 'gramo');
+      global.unidadesSingular.set('D', 'donacion');
    }
    if (!global.unidadesPlural) {
       global.unidadesPlural = new Map();
@@ -20,6 +21,7 @@ export const convertir = (unidad, cantidad) => {
       global.unidadesPlural.set('at', 'atados');
       global.unidadesPlural.set('ar', 'arrobas');
       global.unidadesPlural.set('gr', 'gramos');
+      global.unidadesPlural.set('D', 'donacion');
    }
    if (cantidad == 1) {
       return cantidad + ' ' + global.unidadesSingular.get(unidad);
