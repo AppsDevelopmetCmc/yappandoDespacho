@@ -44,7 +44,6 @@ export class ListaItemsPedidoCombo extends Component {
             break;
          }
       }
-      console.log('despacha' + despacha);
       srvPedidos.actualizarDespachando(this.pedidoCombo.id, despacha)
 
    }

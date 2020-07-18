@@ -144,12 +144,6 @@ export class ServicioPedidos {
             pedido.id = change.doc.id;
             if (change.type == "added") {
               arregloUtil.agregar(pedido, fnRepintar);
-              new ServicioPedidos().crearYapa(pedido.id, {
-                id: 'yapa',
-                nombre: pedido.yapa,
-                empacado: pedido.empacado,
-                recibido: false,
-              });
             }
             if (change.type == "modified") {
               arregloUtil.actualizar(pedido, fnRepintar);
@@ -280,20 +274,6 @@ export class ServicioPedidos {
       })
       .catch(function (error) {
         Alert.alert("Se ha producido un Error", error);
-      });
-  };
-  crearYapa = (idPedido, yapa) => {
-    global.db
-      .collection("pedidos")
-      .doc(idPedido)
-      .collection("combos")
-      .doc(yapa.id)
-      .set(yapa)
-      .then(function () {
-        // Alert.alert('Yapa agregado');
-      })
-      .catch(function (error) {
-        Alert.alert('error' + error);
       });
   };
 
