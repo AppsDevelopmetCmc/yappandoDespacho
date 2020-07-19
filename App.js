@@ -2,7 +2,7 @@ import * as React from "react";
 import { View, Text, YellowBox } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-
+import { Icon } from 'react-native-elements';
 import { FormTotales } from "./screens/FormTotales";
 import { PedidoDisponibilidad } from "./screens/disponibilidad/PedidoDisponibilidad";
 import { ListaItemsPedidoCombo } from "./screens/despachador/ListaItemsPedidoCombo";
@@ -70,7 +70,7 @@ function App() {
   return (
     <NavigationContainer>
       <TabHome.Navigator initialRouteName="ListaRepartidoresScreen">
-        {/*         <TabHome.Screen
+        {/* <TabHome.Screen
           name="FormCTransferenciaScreen"
           component={FormCTransferencia}
           options={{ tabBarLabel: 'Tranferencias' }}
@@ -83,18 +83,53 @@ function App() {
         <TabHome.Screen
           name="TransferenciaStackScreen"
           component={TransferenciaStackScreen}
-          options={{ tabBarLabel: "Control" }}
+
+          options={{
+            tabBarLabel: "Control",
+            tabBarIcon: ({ color, size }) => (
+              <Icon
+                name="file-check"
+                type="material-community"
+                // color={colores.colorBlanco}
+                size={29.5}
+
+              />
+            ),
+          }}
         />
 
         <TabHome.Screen
           name="FormTotalesScreen"
           component={FormTotales}
-          options={{ tabBarLabel: "Consolidador" }}
+          options={{
+            tabBarLabel: "Consolidador",
+            tabBarIcon: ({ color, size }) => (
+              <Icon
+                name="playlist-edit"
+                type="material-community"
+                // color={colores.colorBlanco}
+                size={29.5}
+
+              />
+            ),
+          }}
         />
         <TabHome.Screen
           name="DespachadorStackScreen"
           component={DespachadorStackScreen}
-          options={{ tabBarLabel: "Despachador" }}
+          options={{
+            tabBarLabel: "Despachador",
+
+            tabBarIcon: ({ color, size }) => (
+              <Icon
+                name="playlist-check"
+                type="material-community"
+                // color={colores.colorBlanco}
+                size={29.5}
+
+              />
+            ),
+          }}
         />
       </TabHome.Navigator>
     </NavigationContainer>
