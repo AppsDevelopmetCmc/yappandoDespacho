@@ -48,36 +48,37 @@ export class FormTotales extends Component {
    }
 
    repintarLista = async (pedido) => {
-      //console.log("ListaPedido", pedido)
+      console.log("ListaPedido", pedido)
       if (pedido.length > 0) {
          let srvPedido = new ServicioPedidos();
          let productos = await srvPedido.obtenerProductos()
-         // console.log("productos", productos)
          let productosTotales = [];
-
          for (let i = 0; i < productos.length; i++) {
             let productosItem = productos[i];
             let totalProducto = 0;
             let cantidadTotal = 0;
             for (let j = 0; j < pedido.length; j++) {
-               if (pedido[j].estado !== 'CA') {
                   for (let k = 0; k < pedido[j].listaCombos.length; k++) {
-                     if (productos[i].id == pedido[j].listaCombos[k].id) {
-                    /*    console.log("producto", productos[i].nombre)
-                        console.log("pedido id", pedido[j].id)
-                        console.log("cantidad pedido", pedido[j].listaCombos[k].cantidad)
-                        console.log("item", pedido[j].listaCombos[k].cantidadItem) */
-                        totalProducto = parseInt(totalProducto) + parseInt(pedido[j].listaCombos[k].cantidadItem * pedido[j].listaCombos[k].cantidad);
-                        cantidadTotal = parseInt(cantidadTotal) + parseInt(pedido[j].listaCombos[k].cantidad);
-                     }
-                  }
+                     if ( pedido[j].listaCombos[k].id=='yapa' && productos[i].estado =='Y'){
+                        if (productos[i].nombre == pedido[j].listaCombos[k].nombre) {
+                           totalProducto = parseInt(totalProducto) + parseInt(pedido[j].listaCombos[k].cantidadItem * pedido[j].listaCombos[k].cantidad);
+                           cantidadTotal = parseInt(cantidadTotal) + parseInt(pedido[j].listaCombos[k].cantidad);
+                        }
+                     } else{
+                        if (productos[i].id == pedido[j].listaCombos[k].id) {
+                           totalProducto = parseInt(totalProducto) + parseInt(pedido[j].listaCombos[k].cantidadItem * pedido[j].listaCombos[k].cantidad);
+                           cantidadTotal = parseInt(cantidadTotal) + parseInt(pedido[j].listaCombos[k].cantidad);
+                        }
+                     }    
                }
+            }
+            if(productos[i].estado =='Y'){
+               productosItem.nombre = 'YAPA '+ productosItem.nombre;
             }
             productosItem.totalProducto = parseInt(totalProducto);
             productosItem.cantidadTotal = parseInt(cantidadTotal);
             productosTotales.push(productosItem);
          }
-         // console.log('totales productos', productosTotales)
          this.setState({
             listaTotalesPedidos: productosTotales
          })
