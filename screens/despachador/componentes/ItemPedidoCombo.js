@@ -32,9 +32,10 @@ export class ItemPedidoCombo extends Component {
     /*let cantidadTotal = parseInt(this.props.pedidoComboItem.cantidadItem * this.props.pedidoComboItem.cantidad);
     let compraIndividual = parseInt(this.props.pedidoComboItem.cantidad) + ' Pedidos de ' +
       this.props.pedidoComboItem.cantidadItem + ' ' + this.props.pedidoComboItem.unidad*/
+      console.log(this.props.idPedido)
     return (
       <View style={
-        this.state.checked ? styles.filaSeleccionada : styles.fila
+        this.state.checked ? styles.filaSeleccionada : (this.props.pedidoComboItem.id == 'yapa'?styles.filaYapa:styles.fila)
       }>
         <View style={{ flex: 2 }} >
           <Text style={styles.textoNegrita}>
@@ -123,6 +124,14 @@ const styles = StyleSheet.create({
     marginTop: 5,
     borderRadius: 15,
     marginLeft: 10
+  },
+  filaYapa: {
+    flex: 1,
+    flexDirection: 'row',
+    marginTop: 5,
+    borderRadius: 15,
+    marginLeft: 10,
+    backgroundColor:colores.colorOscuroPrimarioVerde
   },
   touch: {
     flex: 3,
