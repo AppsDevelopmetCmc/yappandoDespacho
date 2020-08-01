@@ -62,16 +62,18 @@ export class ListaItemsPedidoCombo extends Component {
                }}>Detalle del Pedido</Text>
                <View style={{ flexDirection: 'row', }}>
                   <Text style={styles.textoNegrita}>{'Pedido: '}</Text>
-                  <Text style={{
-                  }}>{this.pedidoCombo.orden.slice(-5)}</Text>
+                  <Text>{this.pedidoCombo.orden.slice(-5)}</Text>
                </View>
                <View style={{ flexDirection: 'row', }}>
                   <Text style={styles.textoNegrita}>{'Cliente: '}</Text>
-                  <Text style={{
-                  }}>{this.pedidoCombo.nombreCliente}</Text>
+                  <Text>{this.pedidoCombo.nombreCliente}</Text>
+               </View>
+               <View style={{ flexDirection: 'row', width:'72%'}}>
+                  <Text style={styles.textoNegrita}>{'Observación: '}</Text>
+                  <Text>{this.pedidoCombo.observacion}</Text>
                </View>
             </View>
-            <View style={{ flex: 6 }}>
+            <View style={{ flex: 4 }}>
 
 
                <FlatList
