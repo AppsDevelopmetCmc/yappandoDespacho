@@ -18,6 +18,7 @@ export class ServicioPedidos {
     global.db
       .collection("pedidos")
       .where("fechaEntrega", "==", fecha)
+      .where("estado","in",["PI","CT","TA","AA"])
       .get()
       .then(async function (coleccion) {
         let documentos = coleccion.docs;
@@ -102,8 +103,8 @@ export class ServicioPedidos {
   obtenerProductos = async () => {
     let documentos = await global.db
       .collection("items")
-      .where("estado", "==", "V")
-      .orderBy("posicion")
+      .where("estado", "in", ["V","Y"])
+      .orderBy("nombre","asc")
       .get();
     let items = [];
     for (let i = 0; i < documentos.docs.length; i++) {
