@@ -18,7 +18,7 @@ export class ServicioPedidos {
     global.db
       .collection("pedidos")
       .where("fechaEntrega", "==", fecha)
-      .where("estado","in",["PI","CT","TA","AA"])
+      .where("estado", "in", ["PI", "CT", "TA", "AA"])
       .get()
       .then(async function (coleccion) {
         let documentos = coleccion.docs;
@@ -103,8 +103,8 @@ export class ServicioPedidos {
   obtenerProductos = async () => {
     let documentos = await global.db
       .collection("items")
-      .where("estado", "in", ["V","Y"])
-      .orderBy("nombre","asc")
+      .where("estado", "in", ["V", "Y"])
+      .orderBy("nombre", "asc")
       .get();
     let items = [];
     for (let i = 0; i < documentos.docs.length; i++) {
@@ -138,6 +138,7 @@ export class ServicioPedidos {
     global.db
       .collection("pedidos")
       .where("fechaEntrega", "==", fecha)
+      .orderBy("asociado", "asc")
       .onSnapshot(function (snapShot) {
         snapShot.docChanges().forEach(function (change) {
           if (change.doc.data().estado !== "CA") {
@@ -163,7 +164,8 @@ export class ServicioPedidos {
     global.db
       .collection("pedidos")
       .doc(idPedido)
-      .collection("combos").orderBy('posicionEmpacado')
+      .collection("combos")
+      .orderBy("posicionEmpacado")
       .onSnapshot(function (snapShot) {
         snapShot.docChanges().forEach(function (change) {
           let pedidoItems = change.doc.data();
@@ -270,9 +272,7 @@ export class ServicioPedidos {
       .update({
         despachando: desp,
       })
-      .then(function () {
-        
-      })
+      .then(function () {})
       .catch(function (error) {
         Alert.alert("Se ha producido un Error", error);
       });
