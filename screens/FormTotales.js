@@ -24,11 +24,12 @@ export class FormTotales extends Component {
       this.state = {
          fecha: '',
          listaTotalesPedidos: lista,
+         listaConsolidadoFecha: lista,
          validarFecha: '',
          date: new Date(),
          show: false,
          mostrarCargando: false,
-
+         cargandoNombre: 'Cargando Productos...'
       }
 
    }
@@ -38,36 +39,51 @@ export class FormTotales extends Component {
    }
 
    consultarPedidoFecha = () => {
-      console.log('fecha a buscar', formatearFechaISO(this.state.date));
+      let srvConsolidado = new ServicioConsolidador();
       this.setState({ mostrarCargando: true });
-      let srvPedido = new ServicioPedidos();
-      srvPedido.obtenerPedidoFechaTotal(formatearFechaISO(this.state.date), this.repintarLista
-      );
-
+      srvConsolidado.registrarEscuchaTodas(formatearFechaISO(this.state.date), this.state.listaTotalesPedidos, this.pintarLista, this.finalizarCargando)
 
    }
+   pintarLista = (data) => {
+     
+      this.setState({
+         listaTotalesPedidos: data
+      })
+   }
+   finalizarCargando = (numeroCambios) => {
+      console.log('Finalizando ');
+      if (numeroCambios == 0) {
+         Alert.alert("Información", 'No existen Pedidos para la fecha solicitada')
+         this.setState({ listaTotalesPedidos: [] });
+      }
+      this.setState({ mostrarCargando: false });
+   };
 
-   repintarLista = async (pedido) => {
+   calcularTotales = async (pedido) => {
       console.log("ListaPedido", pedido)
+      let productosTotales = [];
       if (pedido.length > 0) {
          let srvPedido = new ServicioPedidos();
          let productos = await srvPedido.obtenerProductos()
-         let productosTotales = [];
+        
          for (let i = 0; i < productos.length; i++) {
             let productosItem = productos[i];
             let totalProducto = 0;
             let cantidadTotal = 0;
+            let listaIdsPedidos = [];
             for (let j = 0; j < pedido.length; j++) {
                   for (let k = 0; k < pedido[j].listaCombos.length; k++) {
                      if ( pedido[j].listaCombos[k].id=='yapa' && productos[i].estado =='Y'){
                         if (productos[i].nombre == pedido[j].listaCombos[k].nombre) {
                            totalProducto = parseInt(totalProducto) + parseInt(pedido[j].listaCombos[k].cantidadItem * pedido[j].listaCombos[k].cantidad);
                            cantidadTotal = parseInt(cantidadTotal) + parseInt(pedido[j].listaCombos[k].cantidad);
+                           listaIdsPedidos.push({id: pedido[j].orden})
                         }
                      } else{
                         if (productos[i].id == pedido[j].listaCombos[k].id) {
                            totalProducto = parseInt(totalProducto) + parseInt(pedido[j].listaCombos[k].cantidadItem * pedido[j].listaCombos[k].cantidad);
                            cantidadTotal = parseInt(cantidadTotal) + parseInt(pedido[j].listaCombos[k].cantidad);
+                           listaIdsPedidos.push({id: pedido[j].orden})
                         }
                      }    
                }
@@ -75,35 +91,35 @@ export class FormTotales extends Component {
             if(productos[i].estado =='Y'){
                productosItem.nombre = 'YAPA '+ productosItem.nombre;
             }
-            productosItem.totalProducto = parseInt(totalProducto);
-            productosItem.cantidadTotal = parseInt(cantidadTotal);
+            productosItem.totalConsolidado = parseInt(totalProducto);
+            productosItem.totalDespachado = 0 ;
+            productosItem.cantidadPedidos = parseInt(cantidadTotal);
+            productosItem.listaIdsPedidos = listaIdsPedidos;
             productosTotales.push(productosItem);
-         }
-         this.setState({
-            listaTotalesPedidos: productosTotales
-         })
+         }  
       } else {
          Alert.alert("No Existen Pedidos para la Fecha");
-         this.setState({
-            listaTotalesPedidos: [],
-         })
       }
-
-      this.finalizarCargando();
+      this.setState({
+         listaConsolidadoFecha: productosTotales,
+         mostrarCargando: false
+      })
    }
-
-   finalizarCargando = () => {
-      console.log('Finalizando ');
-      this.setState({ mostrarCargando: false });
-   };
 
    crearConsolidador =  () => {
       let srvConsolidado = new ServicioConsolidador();
-      //let dataFecha = await srvConsolidado.buscarConsolidadorFecha(formatearFechaISO(this.state.date))
-      //if (!dataFecha.data()) {
+      let srvPedido = new ServicioPedidos();
+      console.log('fecha a buscar', formatearFechaISO(this.state.date));
+      this.setState({ mostrarCargando: true, cargandoNombre: 'Totalizando Productos...' });
+      
+      srvPedido.obtenerPedidoFechaTotal(formatearFechaISO(this.state.date), this.calcularTotales);
+
+      if (this.state.listaConsolidadoFecha) {
          srvConsolidado.crearConsolidado(formatearFechaISO(this.state.date), {},
-            this.state.listaTotalesPedidos)
-     // }
+            this.state.listaConsolidadoFecha);
+      } else if (this.state.listaConsolidadoFecha.length == 0) {
+         Alert.alert("Información", "No existen Pedidos para la fecha solicitada")
+      } 
 
 
    }
@@ -154,30 +170,7 @@ export class FormTotales extends Component {
                            mode='date'
                            display="default"
                            onChange={this.onChange}
-                        />)}
-                     {/*                      <DatePicker
-
-                        date={this.state.date}
-                        mode="date"
-                        placeholder="Seleccione la Fecha"
-                        format="YYYY-MM-DD"
-                        minDate="2016-05-01"
-                        confirmBtnText="Confirm"
-                        cancelBtnText="Cancel"
-                        customStyles={{
-                           dateIcon: {
-                              position: 'absolute',
-                              left: 0,
-                              top: 4,
-                              marginLeft: 0
-                           },
-                           dateInput: {
-                              marginLeft: 36
-                           }
-
-                        }}
-                        onDateChange={(date) => { this.setState({ date: date }) }}
-                     /> */}
+                        />)}   
                   </View>
                   <View style={styles.viewBtn}>
                      <View style={styles.btn}>
@@ -188,9 +181,6 @@ export class FormTotales extends Component {
                            let srvConsolidado = new ServicioConsolidador();
                            let dataFecha = await srvConsolidado.buscarConsolidadorFecha(formatearFechaISO(this.state.date))
                            if (!dataFecha.data()) {
-                              if (this.state.listaTotalesPedidos.length == 0) {
-                                 Alert.alert("Información", "No existen Pedidos para la fecha solicitada")
-                              } else {
                                  Alert.alert(
                                     'Confirmación',
                                     'Ya no se receptaran más pedidos para la fecha: ' + formatearFechaISO(this.state.date),
@@ -209,7 +199,6 @@ export class FormTotales extends Component {
                                     ],
                                     { cancelable: false }
                                  );
-                              }
                            } else {
                               Alert.alert("No se puede realizar el cierre",
                                  "Ya existe un cierre para la Fecha:" + formatearFechaISO(this.state.date))
@@ -218,7 +207,7 @@ export class FormTotales extends Component {
                      </View>
                   </View>
                   <Cargando
-                     text="Totalizando Productos..."
+                     text={this.state.cargandoNombre}
                      isVisible={this.state.mostrarCargando}
                   ></Cargando>
                </View>

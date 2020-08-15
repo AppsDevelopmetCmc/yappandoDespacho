@@ -15,51 +15,23 @@ export class ServicioConsolidador {
    }
 
    crearConsolidado = (fecha, consolidado, items) => {
-      global.db
-         .collection('consolidados')
-         .doc(fecha)
-         .set(consolidado)
-         .then(function (doc) {
             Alert.alert(
                'Confirmación',
-               'Ya no se podra receptar más pedidos para la Fecha: ' + fecha
+               'Ya no se podrá receptar más pedidos para la Fecha: ' + fecha
             );
             for (let i = 0; i < items.length; i++) {
 
-               if (items[i].tipo) {
-                  let separdorItem = items[i];
-                  separdorItem.verificado = true;
                   global.db
                      .collection('consolidados')
                      .doc(fecha)
                      .collection('productos')
                      .doc(items[i].id)
-                     .set(separdorItem);
-               }
-               else {
-                  let totalItem = {};
-                  totalItem.nombre = items[i].nombre;
-                  totalItem.cantidadItem = items[i].cantidad;
-                  totalItem.unidad = items[i].unidad;
-                  totalItem.pedidos = items[i].cantidadTotal;
-                  totalItem.total = items[i].totalProducto;
-                  totalItem.verificado = false;
-                  totalItem.id = items[i].id;
-                  totalItem.posicion = items[i].posicion;
+                     .set(items[i])
+                     .catch(function (error) {
+                        Alert.alert('Se ha Producido un error', error);
+                     });;
 
-                  global.db
-                     .collection('consolidados')
-                     .doc(fecha)
-                     .collection('productos')
-                     .doc(items[i].id)
-                     .set(totalItem);
-               }
             }
-
-         })
-         .catch(function (error) {
-            Alert.alert('Se ha Producido un error', error);
-         });
    }
 
    registrarEscuchaTodas = (fecha, arreglo, fnRepintar, fnFinalizar) => {
@@ -69,7 +41,7 @@ export class ServicioConsolidador {
          .collection("consolidados")
          .doc(fecha)
          .collection('productos')
-         .orderBy('posicion')
+         .orderBy('nombre')
          .onSnapshot(
             function (snapShot) {
                snapShot.docChanges().forEach(
@@ -115,7 +87,6 @@ export class ServicioConsolidador {
          .collection('consolidados')
          .doc(fecha)
          .get()
-         console.log("aqui",dataFecha)
 
          return dataFecha
    }
