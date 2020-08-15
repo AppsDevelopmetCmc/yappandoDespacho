@@ -44,7 +44,7 @@ export class ItemTotalPedido extends Component {
                 {"Pedidos "}
               </Text>
               <Text style={styles.texto}>
-                {this.props.pedido.cantidadTotal}
+                {this.props.pedido.cantidadPedidos}
               </Text>
             </View>
             <View style={{ flex: 1 }}>
@@ -52,7 +52,7 @@ export class ItemTotalPedido extends Component {
                 {"Total "}
               </Text>
               <Text style={styles.texto}>
-                {convertir(this.props.pedido.unidad, this.props.pedido.totalProducto)}
+                {convertir(this.props.pedido.unidad, this.props.pedido.totalConsolidado)}
               </Text>
             </View>
           </View>
