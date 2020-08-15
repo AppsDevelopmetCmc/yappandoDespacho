@@ -2,7 +2,7 @@ import * as React from "react";
 import { View, Text, YellowBox } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { Icon } from 'react-native-elements';
+import { Icon } from "react-native-elements";
 import { FormTotales } from "./screens/FormTotales";
 import { PedidoDisponibilidad } from "./screens/disponibilidad/PedidoDisponibilidad";
 import { ListaItemsPedidoCombo } from "./screens/despachador/ListaItemsPedidoCombo";
@@ -12,6 +12,8 @@ import { FormCTransferencia } from "./screens/transferencias/FormCTransferencia"
 import { FormCFacturas } from "./screens/facturas/FormCFacturas";
 import { ListaRepartidores } from "./screens/repartidor/ListaRepartidores";
 import { cargarConfiguracion } from "./utils/FirebaseConfig";
+
+import * as colores from "./componentes/constants/Colores";
 
 if (!global.firebaseRegistrado) {
   cargarConfiguracion();
@@ -42,10 +44,16 @@ function DespachadorStackScreen() {
       <HomeStack.Screen
         name="ListaPedidoComboScreen"
         component={ListaPedidoCombo}
+        options={{
+          title: "Yappando Despacho",
+        }}
       />
       <HomeStack.Screen
         name="ListaItemsPedidoComboScreen"
         component={ListaItemsPedidoCombo}
+        options={{
+          title: "Detalle del Pedido",
+        }}
       />
     </HomeStack.Navigator>
   );
@@ -83,7 +91,6 @@ function App() {
         <TabHome.Screen
           name="TransferenciaStackScreen"
           component={TransferenciaStackScreen}
-
           options={{
             tabBarLabel: "Control",
             tabBarIcon: ({ color, size }) => (
@@ -92,7 +99,6 @@ function App() {
                 type="material-community"
                 // color={colores.colorBlanco}
                 size={29.5}
-
               />
             ),
           }}
@@ -109,7 +115,6 @@ function App() {
                 type="material-community"
                 // color={colores.colorBlanco}
                 size={29.5}
-
               />
             ),
           }}
@@ -126,7 +131,6 @@ function App() {
                 type="material-community"
                 // color={colores.colorBlanco}
                 size={29.5}
-
               />
             ),
           }}
