@@ -13,6 +13,8 @@ import { FormCFacturas } from "./screens/facturas/FormCFacturas";
 import { ListaRepartidores } from "./screens/repartidor/ListaRepartidores";
 import { cargarConfiguracion } from "./utils/FirebaseConfig";
 
+import { DespachadorStackScreen } from "./screens/navegacion/NavegacionDespacho";
+
 import * as colores from "./componentes/constants/Colores";
 
 if (!global.firebaseRegistrado) {
@@ -33,27 +35,6 @@ function DisponibilidadStackScreen() {
       <HomeStack.Screen
         name="DisponibilidadScreen"
         component={PedidoDisponibilidad}
-      />
-    </HomeStack.Navigator>
-  );
-}
-
-function DespachadorStackScreen() {
-  return (
-    <HomeStack.Navigator>
-      <HomeStack.Screen
-        name="ListaPedidoComboScreen"
-        component={ListaPedidoCombo}
-        options={{
-          title: "Yappando Despacho",
-        }}
-      />
-      <HomeStack.Screen
-        name="ListaItemsPedidoComboScreen"
-        component={ListaItemsPedidoCombo}
-        options={{
-          title: "Detalle del Pedido",
-        }}
       />
     </HomeStack.Navigator>
   );
