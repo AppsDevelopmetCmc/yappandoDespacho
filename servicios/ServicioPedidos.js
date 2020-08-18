@@ -15,7 +15,7 @@ export class ServicioPedidos {
   }
 
   obtenerPedidoFechaTotal = async (fecha, fnRepintar) => {
-    global.db
+    await global.db
       .collection("pedidos")
       .where("fechaEntrega", "==", fecha)
       .where("estado","in",["PI","CT","TA","AA"])

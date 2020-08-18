@@ -40,8 +40,8 @@ export class FormTotales extends Component {
 
    consultarPedidoFecha = () => {
       let srvConsolidado = new ServicioConsolidador();
-      this.setState({ mostrarCargando: true });
-      srvConsolidado.registrarEscuchaTodas(formatearFechaISO(this.state.date), this.state.listaTotalesPedidos, this.pintarLista, this.finalizarCargando)
+      this.setState({ mostrarCargando: true, listaTotalesPedidos: [] });
+      srvConsolidado.registrarEscuchaTodas(formatearFechaISO(this.state.date), [], this.pintarLista, this.finalizarCargando)
 
    }
    pintarLista = (data) => {
@@ -60,7 +60,7 @@ export class FormTotales extends Component {
    };
 
    calcularTotales = async (pedido) => {
-      console.log("ListaPedido", pedido)
+      let srvConsolidado = new ServicioConsolidador();
       let productosTotales = [];
       if (pedido.length > 0) {
          let srvPedido = new ServicioPedidos();
@@ -77,13 +77,13 @@ export class FormTotales extends Component {
                         if (productos[i].nombre == pedido[j].listaCombos[k].nombre) {
                            totalProducto = parseInt(totalProducto) + parseInt(pedido[j].listaCombos[k].cantidadItem * pedido[j].listaCombos[k].cantidad);
                            cantidadTotal = parseInt(cantidadTotal) + parseInt(pedido[j].listaCombos[k].cantidad);
-                           listaIdsPedidos.push({id: pedido[j].orden})
+                           listaIdsPedidos.push({orden: pedido[j].orden, cliente: pedido[j].nombreCliente})
                         }
                      } else{
                         if (productos[i].id == pedido[j].listaCombos[k].id) {
                            totalProducto = parseInt(totalProducto) + parseInt(pedido[j].listaCombos[k].cantidadItem * pedido[j].listaCombos[k].cantidad);
                            cantidadTotal = parseInt(cantidadTotal) + parseInt(pedido[j].listaCombos[k].cantidad);
-                           listaIdsPedidos.push({id: pedido[j].orden})
+                           listaIdsPedidos.push({orden: pedido[j].orden, cliente: pedido[j].nombreCliente})
                         }
                      }    
                }
@@ -97,29 +97,35 @@ export class FormTotales extends Component {
             productosItem.listaIdsPedidos = listaIdsPedidos;
             productosTotales.push(productosItem);
          }  
+         this.setState({
+            listaConsolidadoFecha: productosTotales,
+            listaTotalesPedidos: productosTotales
+         })
       } else {
          Alert.alert("No Existen Pedidos para la Fecha");
       }
       this.setState({
-         listaConsolidadoFecha: productosTotales,
          mostrarCargando: false
       })
+      console.log("termina totalizar")
+      srvConsolidado.crearConsolidado(formatearFechaISO(this.state.date), {actual: true},
+      this.state.listaConsolidadoFecha);
    }
 
-   crearConsolidador =  () => {
+   crearConsolidador = async () => {
       let srvConsolidado = new ServicioConsolidador();
       let srvPedido = new ServicioPedidos();
       console.log('fecha a buscar', formatearFechaISO(this.state.date));
       this.setState({ mostrarCargando: true, cargandoNombre: 'Totalizando Productos...' });
       
-      srvPedido.obtenerPedidoFechaTotal(formatearFechaISO(this.state.date), this.calcularTotales);
-
-      if (this.state.listaConsolidadoFecha) {
+      await srvPedido.obtenerPedidoFechaTotal(formatearFechaISO(this.state.date), this.calcularTotales);
+/*
+      if (this.state.listaConsolidadoFecha.length > 0) {
          srvConsolidado.crearConsolidado(formatearFechaISO(this.state.date), {},
             this.state.listaConsolidadoFecha);
       } else if (this.state.listaConsolidadoFecha.length == 0) {
          Alert.alert("Información", "No existen Pedidos para la fecha solicitada")
-      } 
+      } */
 
 
    }
@@ -181,6 +187,7 @@ export class FormTotales extends Component {
                            let srvConsolidado = new ServicioConsolidador();
                            let dataFecha = await srvConsolidado.buscarConsolidadorFecha(formatearFechaISO(this.state.date))
                            if (!dataFecha.data()) {
+                              console.log('no hay datos')
                                  Alert.alert(
                                     'Confirmación',
                                     'Ya no se receptaran más pedidos para la fecha: ' + formatearFechaISO(this.state.date),
@@ -200,6 +207,7 @@ export class FormTotales extends Component {
                                     { cancelable: false }
                                  );
                            } else {
+                              console.log('si hay datos')
                               Alert.alert("No se puede realizar el cierre",
                                  "Ya existe un cierre para la Fecha:" + formatearFechaISO(this.state.date))
                            }
