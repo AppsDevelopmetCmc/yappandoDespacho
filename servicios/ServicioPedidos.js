@@ -39,7 +39,7 @@ export class ServicioPedidos {
           }
           pedidos[i].listaCombos = listaCombos;
         }
-        fnRepintar(pedidos);
+         await fnRepintar(pedidos);
       });
   };
 
