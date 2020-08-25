@@ -58,7 +58,9 @@ export class ServicioItemProductos {
    };
    registrarEscuchaTodas = (arreglo, fnRepintar) => {
       let arregloUtil = new ArregloUtil(arreglo);
-      global.db.collection('items').onSnapshot(function(snapShot) {
+      global.db.collection('items')
+      .where("estado", "==", "V")
+      .onSnapshot(function(snapShot) {
          snapShot.docChanges().forEach(function(change) {
             let item = change.doc.data();
             item.id =  change.doc.id;
