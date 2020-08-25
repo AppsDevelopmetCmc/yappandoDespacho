@@ -39,7 +39,7 @@ export class ServicioPedidos {
           }
           pedidos[i].listaCombos = listaCombos;
         }
-        fnRepintar(pedidos);
+         await fnRepintar(pedidos);
       });
   };
 
@@ -137,11 +137,11 @@ export class ServicioPedidos {
     let arregloUtil = new ArregloUtil(arreglo);
     global.db
       .collection("pedidos")
-      .where("fechaEntrega", "==", fecha)
+      .where("fechaEntrega", "==", fecha)      .where("estado","in",["PI","CT","TA","AA"])
       .orderBy("asociado", "asc")
       .onSnapshot(function (snapShot) {
         snapShot.docChanges().forEach(function (change) {
-          if (change.doc.data().estado !== "CA") {
+          
             let pedido = change.doc.data();
             pedido.id = change.doc.id;
             if (change.type == "added") {
@@ -153,7 +153,6 @@ export class ServicioPedidos {
             if (change.type == "removed") {
               arregloUtil.eliminar(pedido, fnRepintar);
             }
-          }
         });
         fnFinalizar(snapShot.docChanges().length);
       });

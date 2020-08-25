@@ -7,6 +7,7 @@ import {
   Button,
   FlatList,
   Picker,
+  Modal,
 } from "react-native";
 import { Input, Avatar, CheckBox } from "react-native-elements";
 import { recuperar } from "../../componentes/ServicioImagen";
@@ -20,6 +21,9 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { TouchableHighlight } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Cargando from "../../componentes/Cargando";
+import SearchableDropdown from "react-native-searchable-dropdown";
+import { ServicioRepartidores } from "../../servicios/ServicioRepartidores";
+import { ServicioItemProductos } from "../../servicios/ServicioItemProductos";
 import { ServicioConsolidador } from "../../servicios/ServicioConsolidador";
 
 export class ListaPedidoCombo extends Component {
@@ -31,15 +35,65 @@ export class ListaPedidoCombo extends Component {
       fecha: new Date(),
       show: false,
       mostrarCargando: false,
-      totalPedidos: 0,
-      totalEmpacado: 0,
-      totalDespachado: 0,
+      selectedValue: "seleccione",
+      listaProductos: [
+        { id: 1, name: "manzana" },
+        { id: 2, name: "pera" },
+        { id: 3, name: "zanahoria" },
+        { id: 4, name: "acelga" },
+        { id: 5, name: "tostados" },
+      ],
+      listaRepartidores: [
+        { id: 1, name: "Alex" },
+        { id: 2, name: "Juan" },
+        { id: 3, name: "pedro" },
+        { id: 4, name: "Victor" },
+        { id: 5, name: "Bladi" },
+        { id: 6, name: "yyyyy" },
+        { id: 7, name: "qwerty" },
+      ],
+      modalVisible: false,
     };
   }
 
   componentDidMount() {
     console.log("Ingresa");
+    let listaRepartidor = [];
+    let itemProductos = [];
+    let srvRepartidor = new ServicioRepartidores();
+    let srvItemProductos = new ServicioItemProductos();
+    srvRepartidor.registrarEscuchaTodas(
+      listaRepartidor,
+      this.repintarListaRepartidor
+    );
+
+    srvItemProductos.registrarEscuchaTodas(
+      itemProductos,
+      this.repintarListaProductos
+    );
   }
+
+  repintarListaRepartidor = (repartidores) => {
+    let result = [];
+    repartidores.forEach((element) =>
+      result.push({ id: element.correo, name: element.nombre })
+    );
+
+    this.setState({
+      listaRepartidores: result,
+    });
+  };
+
+  repintarListaProductos = (productos) => {
+    let result = [];
+    productos.forEach((element) =>
+      result.push({ id: element.id, name: element.nombre })
+    );
+
+    this.setState({
+      listaProductos: result,
+    });
+  };
 
   consultarPedidoFecha = () => {
     this.setState({ mostrarCargando: true });
@@ -54,19 +108,8 @@ export class ListaPedidoCombo extends Component {
   };
 
   repintarLista = (pedido) => {
-    var listaEmpacando = pedido.filter((el) => {
-      return el.empacado === true;
-    });
-
-    var listaDespachado = pedido.filter((el) => {
-      return el.despachando === true;
-    });
-
     this.setState({
       listaPedidos: pedido,
-      totalPedidos: pedido.length,
-      totalEmpacado: listaEmpacando.length,
-      totalDespachado: listaDespachado.length,
     });
   };
 
@@ -93,6 +136,90 @@ export class ListaPedidoCombo extends Component {
 
   showDatepicker = () => {
     this.setState({ show: true });
+  };
+  buscarPorFiltro = async (itemSeleccionado) => {
+    let srvConsolidado = new ServicioConsolidador();
+    if (this.state.selectedValue == "producto") {
+      srvConsolidado.buscarIdPedidos(
+        formatearFechaISO(this.state.fecha),
+        itemSeleccionado.id,
+        this.buscarRegistrosPorIds
+      );
+    } else if (this.state.selectedValue == "repartidor") {
+      const result = this.state.listaPedidos.filter(
+        (pedido) => pedido.asociado == itemSeleccionado.id
+      );
+      this.setState({ listaPedidos: result });
+    }
+    this.setState({ modalVisible: false, selectedValue: "seleccione" });
+  };
+
+  buscarRegistrosPorIds = (listIds) => {
+    const result = this.state.listaPedidos.filter((pedido) =>
+      listIds.includes(pedido.orden)
+    );
+    this.setState({ listaPedidos: result });
+  };
+
+  showDropdown = () => {
+    let items =
+      this.state.selectedValue == "producto"
+        ? this.state.listaProductos
+        : this.state.listaRepartidores;
+    return (
+      <View>
+        {this.state.selectedValue != "seleccione" && (
+          <Modal
+            animationType="slide"
+            visible={this.state.modalVisible}
+            backdropOpacity={0.7}
+          >
+            <SearchableDropdown
+              onTextChange={(text) => console.log(text)}
+              onItemSelect={(item) => {
+                this.buscarPorFiltro(item);
+              }}
+              //onItemSelect called after the selection from the dropdown
+              containerStyle={{ padding: 5 }}
+              //suggestion container style
+              textInputStyle={{
+                //inserted text style
+                padding: 12,
+                borderWidth: 1,
+                borderColor: "#ccc",
+                backgroundColor: "#FAF7F6",
+              }}
+              itemStyle={{
+                //single dropdown item style
+                padding: 10,
+                marginTop: 2,
+                backgroundColor: "#FAF9F8",
+                borderColor: "#bbb",
+                borderWidth: 1,
+              }}
+              itemTextStyle={{
+                //text style of a single dropdown item
+                color: "#222",
+              }}
+              itemsContainerStyle={{
+                //items container style you can pass maxHeight
+                //to restrict the items dropdown hieght
+                maxHeight: "90%",
+              }}
+              items={items}
+              //mapping of item array
+
+              placeholder="Buscar"
+              //place holder for the search input
+              resetValue={false}
+              //reset textInput Value with true and false state
+              underlineColorAndroid="transparent"
+              //To remove the underline from the android input
+            />
+          </Modal>
+        )}
+      </View>
+    );
   };
 
   render() {
@@ -142,28 +269,41 @@ export class ListaPedidoCombo extends Component {
               isVisible={this.state.mostrarCargando}
             ></Cargando>
           </View>
-        </View>
-        <View style={styles.contenedorInformacion}>
-          <View style={styles.contenedorTotales}>
-            <Text style={styles.textoNormal}>Total</Text>
-            <View style={styles.contenedorTotal}>
-              <Text style={styles.textTotales}>{this.state.totalPedidos}</Text>
+          {this.state.listaPedidos.length != 0 && (
+            <View style={styles.fila}>
+              <Text style={styles.textoNegrita}>{"Filtrar por:"}</Text>
+              <Picker
+                selectedValue={this.state.selectedValue}
+                style={{ height: 30, width: 150 }}
+                onValueChange={(itemValue, itemIndex) =>
+                  this.setState({
+                    selectedValue: itemValue,
+                    modalVisible: true,
+                  })
+                }
+                onPress={() => {
+                  this.setState({ modalVisible: true });
+                }}
+              >
+                <Picker.Item label="Seleccione" value="seleccione" />
+                <Picker.Item
+                  label="Producto"
+                  value="producto"
+                  onPress={() => {
+                    this.setState({ modalVisible: true });
+                  }}
+                />
+                <Picker.Item
+                  label="Repartidor"
+                  value="repartidor"
+                  onPress={() => {
+                    this.setState({ modalVisible: true });
+                  }}
+                />
+              </Picker>
             </View>
-          </View>
-          <View style={styles.contenedorTotales}>
-            <Text style={styles.textoNormal}>Empacando</Text>
-            <View style={styles.contenedorNoEmpacado}>
-              <Text style={styles.textTotales}>
-                {this.state.totalDespachado}
-              </Text>
-            </View>
-          </View>
-          <View style={styles.contenedorTotales}>
-            <Text style={styles.textoNormal}>Despachado</Text>
-            <View style={styles.contenedorEmpacado}>
-              <Text style={styles.textTotales}>{this.state.totalEmpacado}</Text>
-            </View>
-          </View>
+          )}
+          {this.showDropdown()}
         </View>
         <View style={styles.pie}>
           <View style={styles.titulo}>
@@ -221,13 +361,12 @@ const flatListItemSeparator = () => {
 const styles = StyleSheet.create({
   titulo: {
     alignItems: "center",
-
+    flex: 1,
     backgroundColor: colores.colorClaroPrimarioTomate,
-    borderTopLeftRadius: 5,
-    borderTopEndRadius: 5,
-    marginLeft: 5,
+    borderTopLeftRadius: 20,
+    borderTopEndRadius: 20,
+    marginLeft: 15,
     marginRight: 5,
-    justifyContent: "center",
   },
   container: {
     flex: 1,
@@ -239,15 +378,14 @@ const styles = StyleSheet.create({
   columna: {
     flex: 1,
     backgroundColor: colores.colorBlanco,
+    marginTop: 30,
+    borderRadius: 15,
   },
   fila: {
     flexDirection: "row",
   },
   date: {
-    borderWidth: 1,
-    margin: 10,
-    padding: 5,
-    borderRadius: 5,
+    flex: 1,
   },
   datePicker: {
     flex: 1,
@@ -272,7 +410,7 @@ const styles = StyleSheet.create({
     marginTop: 0,
     marginLeft: 10,
     fontWeight: "bold",
-    fontSize: 14,
+    fontSize: 17,
   },
   texto: {
     fontSize: 15,
@@ -286,9 +424,8 @@ const styles = StyleSheet.create({
     borderBottomColor: "gray",
     borderBottomWidth: 1,
   },
-  textoNormal: { fontSize: 11 },
   pie: {
-    flex: 7,
+    flex: 4,
     backgroundColor: colores.colorBlanco,
     borderTopStartRadius: 30,
     marginTop: 15,
@@ -317,44 +454,4 @@ const styles = StyleSheet.create({
   contenedorIcon: {
     flex: 1,
   },
-  contenedorInformacion: { flex: 1, flexDirection: "row" },
-  contenedorTotales: {
-    flex: 1,
-    borderColor: colores.colorOscuroPrimario,
-
-    paddingVertical: 2,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  contenedorEmpacado: {
-    flex: 1,
-    borderColor: colores.colorPrimarioVerde,
-    borderWidth: 1,
-    width: 50,
-    height: 50,
-    borderRadius: 5,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  contenedorNoEmpacado: {
-    flex: 1,
-    borderColor: colores.colorPrimarioAmarillo,
-    borderWidth: 1,
-    width: 50,
-    height: 50,
-    borderRadius: 5,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  contenedorTotal: {
-    flex: 1,
-    borderColor: colores.colorOscuroPrimario,
-    borderWidth: 1,
-    width: 50,
-    height: 50,
-    borderRadius: 5,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  textTotales: { fontWeight: "bold", fontSize: 16 },
 });

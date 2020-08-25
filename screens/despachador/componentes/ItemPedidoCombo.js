@@ -29,13 +29,9 @@ export class ItemPedidoCombo extends Component {
 
 
   render() {
-    /*let cantidadTotal = parseInt(this.props.pedidoComboItem.cantidadItem * this.props.pedidoComboItem.cantidad);
-    let compraIndividual = parseInt(this.props.pedidoComboItem.cantidad) + ' Pedidos de ' +
-      this.props.pedidoComboItem.cantidadItem + ' ' + this.props.pedidoComboItem.unidad*/
-      console.log(this.props.idPedido)
     return (
       <View style={
-        this.state.checked ? styles.filaSeleccionada : (this.props.pedidoComboItem.id == 'yapa'?styles.filaYapa:styles.fila)
+        this.props.pedidoComboItem.id == 'yapa'? styles.filaYapa: (this.state.checked ? styles.filaSeleccionada : styles.fila )
       }>
         <View style={{ flex: 2 }} >
           <Text style={styles.textoNegrita}>

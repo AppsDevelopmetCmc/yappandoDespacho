@@ -38,10 +38,19 @@ export class FormTotales extends Component {
       console.log("Ingresa")
    }
 
-   consultarPedidoFecha = () => {
+   consultarPedidoFecha = async() => {
       let srvConsolidado = new ServicioConsolidador();
+      let srvPedido = new ServicioPedidos();
       this.setState({ mostrarCargando: true, listaTotalesPedidos: [] });
-      srvConsolidado.registrarEscuchaTodas(formatearFechaISO(this.state.date), [], this.pintarLista, this.finalizarCargando)
+      
+      let dataFecha = await srvConsolidado.buscarConsolidadorFecha(formatearFechaISO(this.state.date))
+      if (!dataFecha.data()) {
+         console.log('calcula')
+         await srvPedido.obtenerPedidoFechaTotal(formatearFechaISO(this.state.date), this.calcularTotales);
+      } else {
+         console.log('consulta')
+         srvConsolidado.registrarEscuchaTodas(formatearFechaISO(this.state.date), [], this.pintarLista, this.finalizarCargando);
+      }
 
    }
    pintarLista = (data) => {
@@ -108,8 +117,8 @@ export class FormTotales extends Component {
          mostrarCargando: false
       })
       console.log("termina totalizar")
-      srvConsolidado.crearConsolidado(formatearFechaISO(this.state.date), {actual: true},
-      this.state.listaConsolidadoFecha);
+     /* srvConsolidado.crearConsolidado(formatearFechaISO(this.state.date), {actual: true},
+      this.state.listaConsolidadoFecha); */
    }
 
    crearConsolidador = async () => {
@@ -119,13 +128,14 @@ export class FormTotales extends Component {
       this.setState({ mostrarCargando: true, cargandoNombre: 'Totalizando Productos...' });
       
       await srvPedido.obtenerPedidoFechaTotal(formatearFechaISO(this.state.date), this.calcularTotales);
-/*
+
       if (this.state.listaConsolidadoFecha.length > 0) {
-         srvConsolidado.crearConsolidado(formatearFechaISO(this.state.date), {},
+         console.log("crea consolidado")
+         srvConsolidado.crearConsolidado(formatearFechaISO(this.state.date), {actual: true},
             this.state.listaConsolidadoFecha);
       } else if (this.state.listaConsolidadoFecha.length == 0) {
          Alert.alert("Información", "No existen Pedidos para la fecha solicitada")
-      } */
+      } 
 
 
    }
