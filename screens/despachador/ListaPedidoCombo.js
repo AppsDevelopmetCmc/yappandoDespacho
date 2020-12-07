@@ -115,12 +115,13 @@ export class ListaPedidoCombo extends Component {
   };
 
   finalizarCargando = (numeroCambios) => {
-    console.log("Finalizando ");
+    console.log("Número de cambios", numeroCambios);
     if (numeroCambios == 0) {
       this.setState({ listaPedidos: [] });
       Alert.alert("Información", "No existen Pedidos para la Fecha");
     }
     this.setState({ mostrarCargando: false });
+    console.log("Finaliza la carga de los datos");
   };
 
   pedidoCombo = (combo) => {
