@@ -107,19 +107,24 @@ export class ServicioConsolidador {
   };
 
   buscarIdPedidos = async (fecha, idProducto, fnPintar) => {
-    await global.db.collection("consolidados")
-    .doc(fecha).collection("productos").doc(idProducto).collection("pedidos").get().then(snapshot => {
-      if (snapshot.empty) {
-        console.log('No matching documents.');
-        return;
-      }
-      let listaIds = [];
-      snapshot.forEach(doc => {
-        console.log(doc.id, '=>', doc.data());
-        listaIds.push(doc.id)
+    await global.db
+      .collection("consolidados")
+      .doc(fecha)
+      .collection("productos")
+      .doc(idProducto)
+      .collection("pedidos")
+      .get()
+      .then((snapshot) => {
+        if (snapshot.empty) {
+          console.log("No matching documents.");
+          return;
+        }
+        let listaIds = [];
+        snapshot.forEach((doc) => {
+          console.log(doc.id, "=>", doc.data());
+          listaIds.push(doc.id);
+        });
+        fnPintar(listaIds);
       });
-      fnPintar(listaIds);
-    });
-    
   };
 }

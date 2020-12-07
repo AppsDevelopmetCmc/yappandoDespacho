@@ -46,6 +46,10 @@ function DespachadorStackScreen() {
         component={ListaPedidoCombo}
         options={{
           title: "Yappando Despacho",
+          headerStyle: {
+            backgroundColor: colores.colorPrimarioVerde,
+          },
+          headerTintColor: colores.colorOscuroTexto,
         }}
       />
       <HomeStack.Screen
@@ -53,6 +57,23 @@ function DespachadorStackScreen() {
         component={ListaItemsPedidoCombo}
         options={{
           title: "Detalle del Pedido",
+        }}
+      />
+    </HomeStack.Navigator>
+  );
+}
+function ConsolodidarStackScreen() {
+  return (
+    <HomeStack.Navigator>
+      <HomeStack.Screen
+        name="FormTotales"
+        component={FormTotales}
+        options={{
+          title: "Yappando Consolidador",
+          headerStyle: {
+            backgroundColor: colores.colorPrimarioVerde,
+          },
+          headerTintColor: colores.colorOscuroTexto,
         }}
       />
     </HomeStack.Navigator>
@@ -92,6 +113,7 @@ function App() {
           name="TransferenciaStackScreen"
           component={TransferenciaStackScreen}
           options={{
+            tabBarVisible: true,
             tabBarLabel: "Control",
             tabBarIcon: ({ color, size }) => (
               <Icon
@@ -105,8 +127,8 @@ function App() {
         />
 
         <TabHome.Screen
-          name="FormTotalesScreen"
-          component={FormTotales}
+          name="ConsolodidarStackScreen"
+          component={ConsolodidarStackScreen}
           options={{
             tabBarLabel: "Consolidador",
             tabBarIcon: ({ color, size }) => (
