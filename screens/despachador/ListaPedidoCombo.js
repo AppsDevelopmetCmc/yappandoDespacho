@@ -8,6 +8,7 @@ import {
   FlatList,
   Picker,
   Modal,
+  StatusBar,
 } from "react-native";
 import { Input, Avatar, CheckBox } from "react-native-elements";
 import { recuperar } from "../../componentes/ServicioImagen";
@@ -114,12 +115,13 @@ export class ListaPedidoCombo extends Component {
   };
 
   finalizarCargando = (numeroCambios) => {
-    console.log("Finalizando ");
+    console.log("Número de cambios", numeroCambios);
     if (numeroCambios == 0) {
       this.setState({ listaPedidos: [] });
       Alert.alert("Información", "No existen Pedidos para la Fecha");
     }
     this.setState({ mostrarCargando: false });
+    console.log("Finaliza la carga de los datos");
   };
 
   pedidoCombo = (combo) => {
@@ -162,6 +164,7 @@ export class ListaPedidoCombo extends Component {
   };
 
   showDropdown = () => {
+    console.log("Ingresa a mostrar el showDropdown");
     let items =
       this.state.selectedValue == "producto"
         ? this.state.listaProductos
@@ -278,6 +281,7 @@ export class ListaPedidoCombo extends Component {
                 onValueChange={(itemValue, itemIndex) =>
                   this.setState({
                     selectedValue: itemValue,
+
                     modalVisible: true,
                   })
                 }
@@ -361,12 +365,12 @@ const flatListItemSeparator = () => {
 const styles = StyleSheet.create({
   titulo: {
     alignItems: "center",
-    flex: 1,
     backgroundColor: colores.colorClaroPrimarioTomate,
-    borderTopLeftRadius: 20,
-    borderTopEndRadius: 20,
-    marginLeft: 15,
+    borderTopLeftRadius: 5,
+    borderTopEndRadius: 5,
+    marginLeft: 5,
     marginRight: 5,
+    justifyContent: "center",
   },
   container: {
     flex: 1,
@@ -378,14 +382,16 @@ const styles = StyleSheet.create({
   columna: {
     flex: 1,
     backgroundColor: colores.colorBlanco,
-    marginTop: 30,
-    borderRadius: 15,
   },
   fila: {
     flexDirection: "row",
   },
   date: {
-    flex: 1,
+    borderWidth: 1,
+    margin: 10,
+    marginTop: 15,
+    padding: 5,
+    borderRadius: 5,
   },
   datePicker: {
     flex: 1,
@@ -410,7 +416,7 @@ const styles = StyleSheet.create({
     marginTop: 0,
     marginLeft: 10,
     fontWeight: "bold",
-    fontSize: 17,
+    fontSize: 14,
   },
   texto: {
     fontSize: 15,
@@ -424,8 +430,9 @@ const styles = StyleSheet.create({
     borderBottomColor: "gray",
     borderBottomWidth: 1,
   },
+  textoNormal: { fontSize: 11 },
   pie: {
-    flex: 4,
+    flex: 7,
     backgroundColor: colores.colorBlanco,
     borderTopStartRadius: 30,
     marginTop: 15,

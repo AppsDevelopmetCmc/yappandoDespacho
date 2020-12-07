@@ -39,7 +39,7 @@ export class ServicioPedidos {
           }
           pedidos[i].listaCombos = listaCombos;
         }
-         await fnRepintar(pedidos);
+        await fnRepintar(pedidos);
       });
   };
 
@@ -137,22 +137,22 @@ export class ServicioPedidos {
     let arregloUtil = new ArregloUtil(arreglo);
     global.db
       .collection("pedidos")
-      .where("fechaEntrega", "==", fecha)      .where("estado","in",["PI","CT","TA","AA"])
+      .where("fechaEntrega", "==", fecha)
+      .where("estado", "in", ["PI", "CT", "TA", "AA"])
       .orderBy("asociado", "asc")
       .onSnapshot(function (snapShot) {
         snapShot.docChanges().forEach(function (change) {
-          
-            let pedido = change.doc.data();
-            pedido.id = change.doc.id;
-            if (change.type == "added") {
-              arregloUtil.agregar(pedido, fnRepintar);
-            }
-            if (change.type == "modified") {
-              arregloUtil.actualizar(pedido, fnRepintar);
-            }
-            if (change.type == "removed") {
-              arregloUtil.eliminar(pedido, fnRepintar);
-            }
+          let pedido = change.doc.data();
+          pedido.id = change.doc.id;
+          if (change.type == "added") {
+            arregloUtil.agregar(pedido, fnRepintar);
+          }
+          if (change.type == "modified") {
+            arregloUtil.actualizar(pedido, fnRepintar);
+          }
+          if (change.type == "removed") {
+            arregloUtil.eliminar(pedido, fnRepintar);
+          }
         });
         fnFinalizar(snapShot.docChanges().length);
       });
